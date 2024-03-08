@@ -1,4 +1,5 @@
 import * as Joi from "joi";
+import * as bcrypt from "bcrypt";
 import {
   IUserAccounts,
   UserAccountModel,
@@ -129,11 +130,66 @@ export class UserAccountAPI {
     };
 
     const { password } = object;
-    await UserAccountUtils.encryptAndSavePassword(user, password);
-    const newSignee = await new UserAccountModel(user).save();
-    if (newSignee._id) {
+    const userProfile = await UserAccountUtils.encryptAndSavePassword(
+      user,
+      password
+    );
+
+    await new UserAccountModel(userProfile).save();
+
+    return {
+      message: `New user has been created with email ${object.email}`,
+    };
+  }
+
+  /**
+   * Login to new an existing user
+   * @param object
+   * @param options
+   * @returns
+   */
+  static async loginUser(object: any, options: any) {
+    const loginCredsSchema = Joi.object({
+      username: Joi.string().required(),
+      password: Joi.string().required(),
+    });
+
+    const { error, value } = loginCredsSchema.validate(object);
+    if (error) {
       return {
-        message: `New user has been created with email ${object.email}`,
+        status: 400,
+        error,
+      };
+    }
+
+    const { username, password } = object;
+    const userProfile = await UserAccountModel.findOne({
+      $or: [{ email: username }, { username }],
+    })
+      .select({ passwordHash: 1 })
+      .lean()
+      .exec();
+
+    if (!userProfile) {
+      return {
+        status: 404,
+        error: `Username ${username} does not exists`,
+      };
+    }
+
+    const { passwordHash } = userProfile;
+    let isPasswordCorrect = false;
+    if (passwordHash) {
+      isPasswordCorrect = bcrypt.compareSync(password, passwordHash);
+    }
+
+    if (isPasswordCorrect) {
+      return {
+        message: "Login Successfull",
+      };
+    } else {
+      return {
+        message: "Invalid username or password",
       };
     }
   }

@@ -13,18 +13,9 @@ export class UserAccountUtils {
      * Salts to increase randomness
      */
     const saltRounds = 10;
-    bcrypt.genSalt(saltRounds, async (err, salt) => {
-      if (err) {
-        console.error();
-      }
+    const hashedPassword = bcrypt.hashSync(plainTextPassword, saltRounds);
+    userProfile.passwordHash = hashedPassword;
 
-      bcrypt.hash(plainTextPassword, salt, (err, hash) => {
-        if (err) {
-          console.error(err);
-        }
-
-        userProfile["passwordHash"] = hash;
-      });
-    });
+    return userProfile;
   }
 }
