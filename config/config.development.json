@@ -4,6 +4,7 @@
   },
   "database": {
     "url": "mongodb://localhost:27017",
-    "name": "staging"
+    "name": "staging",
+    "enableDebugger": "true"
   }
 }

@@ -3,8 +3,8 @@ import * as bcrypt from "bcrypt";
 import {
   IUserAccounts,
   UserAccountModel,
-} from "../Models/UserAccountModelSchema";
-import { UserAccountUtils } from "../utils/UserAccountUtils";
+} from "../../Models/UserAccountModelSchema";
+import { UserAccountUtils } from "../../utils/UserAccountUtils";
 export class UserAccountAPI {
   /**
    * To create new user for e commerce website

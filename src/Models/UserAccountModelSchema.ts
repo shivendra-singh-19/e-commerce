@@ -1,5 +1,5 @@
+import { config } from "..";
 import mongoose, { Schema, Types } from "mongoose";
-
 export const USER_ROLES = {
   ADMIN: "admin",
   USER: "user",

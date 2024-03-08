@@ -1,5 +1,5 @@
 import express from "express";
-import { UserAccountAPI } from "../api/UserAccountAPI";
+import { UserAccountAPI } from "./UserAccountAPI";
 
 export const UserAccountRouter = express.Router();
 
