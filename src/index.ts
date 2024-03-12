@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import express, { Request, Response } from "express";
 import { UserAccountRouter } from "./api/users/routes";
 import { ItemsListingRouter } from "./api/items/routes";
+import { NotificationRouter } from "./api/notifications/routes";
 
 const configFile = fs.readFileSync(
   __dirname + "/../config/config.development.json",
@@ -26,6 +27,8 @@ app.get("/health", (req: Request, res: Response) => {
 app.use("/user", UserAccountRouter);
 
 app.use("/items", ItemsListingRouter);
+
+app.use("/notifications", NotificationRouter);
 
 app.listen(port, (): void => {
   console.log(`Server Running at ${port}`);
