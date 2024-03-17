@@ -33,10 +33,10 @@ export class NotificationsAPI {
 
   static async cpuIntensiveTask(object: any, options: any) {
     const tock = performance.now();
-    const test = NotificationUtils.cpuIntensiveTask(object, {});
+    const test = await NotificationUtils.cpuIntensiveTask(object, {});
     const tick = performance.now();
     return {
-      message: `Main thread took  ${tick - tock}ms time, ${test.jobChunk}`,
+      message: `Main thread took ${(await test).totalTime}`,
     };
   }
 }
