@@ -3,6 +3,7 @@ import { NotificationsAPI } from "./NotificationsAPI";
 
 export const NotificationRouter = express.Router();
 
+// /notifications/
 NotificationRouter.post("/schedule", async (req, res) => {
   const object = req.body;
   const options = {};
@@ -10,5 +11,12 @@ NotificationRouter.post("/schedule", async (req, res) => {
     object,
     options
   );
+  res.send(apiResponse);
+});
+
+NotificationRouter.get("/cpu-bench", async (req, res) => {
+  const object = req.body;
+  const options = {};
+  const apiResponse = await NotificationsAPI.cpuIntensiveTask(object, options);
   res.send(apiResponse);
 });

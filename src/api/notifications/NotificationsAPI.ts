@@ -30,4 +30,13 @@ export class NotificationsAPI {
       message: `Process scheduled with Id ${notificationTest}`,
     };
   }
+
+  static async cpuIntensiveTask(object: any, options: any) {
+    const tock = performance.now();
+    const test = NotificationUtils.cpuIntensiveTask(object, {});
+    const tick = performance.now();
+    return {
+      message: `Main thread took  ${tick - tock}ms time, ${test.jobChunk}`,
+    };
+  }
 }
