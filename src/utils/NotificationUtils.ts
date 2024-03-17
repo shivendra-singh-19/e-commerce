@@ -9,13 +9,17 @@ import { MainThread } from "../workers/NotificationWorkers/MainThread";
 tsNode.register();
 
 export class NotificationUtils {
+  /**
+   * Using rabbitmq
+   * @param notification
+   */
   static async scheduleNotification(notification: IProducerNotification) {}
 
   static async cpuIntensiveTask(object: any, options: any) {
-    const cpus = object.cpus ?? 1;
     //When using high numbers we can see the effect of this worker running
     //But for lower numbers we don't see this effect because of the overheads of the worker threads managements
     const jobs = Array.from({ length: 2000 }, () => 1e9);
+    const cpus = jobs?.length >= 1000 ? 4 : 1;
     const jobChunk = this.chunkify(jobs, cpus);
 
     const totalTimePromises = jobChunk.map((data, i) => {
