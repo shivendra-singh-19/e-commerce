@@ -28,6 +28,7 @@
     "lodash": "^4.17.21",
     "mongoose": "^8.0.1",
     "nodemon": "^3.0.1",
+    "redis": "^4.6.13",
     "ts-node": "^10.9.2",
     "ts-worker": "^1.0.3",
     "worker-thread": "^1.1.0"

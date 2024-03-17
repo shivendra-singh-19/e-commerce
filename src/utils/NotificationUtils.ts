@@ -15,6 +15,12 @@ export class NotificationUtils {
    */
   static async scheduleNotification(notification: IProducerNotification) {}
 
+  /**
+   * Testing workers working
+   * @param object
+   * @param options
+   * @returns
+   */
   static async cpuIntensiveTask(object: any, options: any) {
     //When using high numbers we can see the effect of this worker running
     //But for lower numbers we don't see this effect because of the overheads of the worker threads managements
@@ -38,6 +44,12 @@ export class NotificationUtils {
     };
   }
 
+  /**
+   * Breaking jobs in chunks
+   * @param jobs
+   * @param cpu
+   * @returns
+   */
   static chunkify(jobs: any, cpu: number) {
     const jobChunkSize = jobs.length / cpu;
     const chunks = _.chunk(jobs, jobChunkSize);
