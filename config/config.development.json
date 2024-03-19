@@ -1,6 +1,6 @@
 {
   "server": {
-    "port": 8000
+    "port": 7000
   },
   "database": {
     "url": "mongodb://localhost:27017",
