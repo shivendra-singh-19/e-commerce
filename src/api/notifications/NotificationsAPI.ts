@@ -68,10 +68,11 @@ export class NotificationsAPI {
 
     burgerQueue.process((payload, done) => {
       console.log("Preparing burger....!");
+      const timeOut: number = Math.random() * 10 * 10000;
       setTimeout(() => {
         console.log("Burger is ready...!");
         done();
-      }, 10000);
+      }, timeOut);
     });
 
     burgerQueue.add({
@@ -215,8 +216,7 @@ export class NotificationsAPI {
       enableReadyCheck: false,
     };
 
-    const scheduledAt =
-      new Date(object.scheduledAt).getTime() - new Date().getTime();
+    const scheduledAt = new Date().getTime() + 2 * 60 * 1000;
     const sleepTime = object.sleepTime * 1000 ?? 2000;
     const totalJobs = object.totalJobs ?? 10;
     const concurrency = object.concurrency ?? 2;

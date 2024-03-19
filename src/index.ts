@@ -1,12 +1,11 @@
 import fs from "fs";
+import Bull from "bull";
+import Redis from "ioredis";
 import mongoose from "mongoose";
 import express, { Request, Response } from "express";
 import { UserAccountRouter } from "./api/users/routes";
 import { ItemsListingRouter } from "./api/items/routes";
 import { NotificationRouter } from "./api/notifications/routes";
-import { createClient } from "redis";
-import Redis from "ioredis";
-import Bull from "bull";
 
 const configFile = fs.readFileSync(
   __dirname + "/../config/config.development.json",
@@ -24,19 +23,6 @@ const app = express();
 app.use(express.json());
 
 const redisConfig = config.redis;
-
-// export const redisClient = createClient({
-//   ...redisConfig,
-//   maxRetriesPerRequests: null,
-//   enableReadyCheck: false,
-// });
-// redisClient.on("error", (err) => console.log("Redis Client Error", err));
-
-// redisClient.connect();
-
-// redisClient.on("connect", () => {
-//   console.log("Redis connection established");
-// });
 
 export const redisClient = new Redis({
   ...redisConfig,
