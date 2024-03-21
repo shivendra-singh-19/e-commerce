@@ -39,12 +39,6 @@ redisClient.on("error", (error) => {
   console.error("Error connecting to redis", error);
 });
 
-export const burgerQueue = new Bull("burger", {
-  ...redisConfig,
-  maxRetriesPerRequest: null,
-  enableReadyCheck: false,
-});
-
 app.get("/health", (req: Request, res: Response) => {
   res.send("Running");
 });

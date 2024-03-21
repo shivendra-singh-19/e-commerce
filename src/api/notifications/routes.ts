@@ -64,3 +64,20 @@ NotificationRouter.get("/bull/queue/test3", async (req, res) => {
   );
   res.send(apiResponse);
 });
+
+NotificationRouter.post("/bull/queue/test3/kill", async (req, res) => {
+  const object = req.body;
+  const options = {};
+  const apiResponse = await NotificationsAPI.killJob(object, options);
+  res.send(apiResponse);
+});
+
+NotificationRouter.get("/bull/queue/test4", async (req, res) => {
+  const object = req.body;
+  const options = {};
+  const apiResponse = await NotificationsAPI.createPriorityBasedJobs(
+    object,
+    options
+  );
+  res.send(apiResponse);
+});

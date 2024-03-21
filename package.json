@@ -8,10 +8,7 @@
     "start": "pm2 start ./dist/index.js -i -1",
     "build": "tsc -p .",
     "dev": "nodemon ./src/index.ts",
-    "stop": "pm2 stop all",
-    "stop1": "pm2 stop 4",
-    "stop2": "pm2 stop 5",
-    "stop3": "pm2 stop 6"
+    "stop": "pm2 stop all"
   },
   "keywords": [],
   "author": "",

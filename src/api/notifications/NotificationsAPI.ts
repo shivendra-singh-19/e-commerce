@@ -209,21 +209,19 @@ export class NotificationsAPI {
   }
 
   static async testBullQueueTest3(object: any, options: any) {
+    const scheduledAt = 2 * 60 * 1000;
+    const sleepTime: number = Math.floor(Math.random() * 10 * 1000);
+    const totalJobs = object.totalJobs ?? 10;
+    const concurrency = object.concurrency ?? 2;
+    const retryAttempts = 6;
+
     const { redis } = config;
     const redisOptions = {
       redis,
       maxRetriesPerRequest: null,
       enableReadyCheck: false,
     };
-
-    const scheduledAt = new Date().getTime() + 2 * 60 * 1000;
-    const sleepTime = object.sleepTime * 1000 ?? 2000;
-    const totalJobs = object.totalJobs ?? 10;
-    const concurrency = object.concurrency ?? 2;
     const burgerQueue = new Bull("burger", redisOptions);
-
-    burgerQueue.clean(1000, "delayed");
-
     burgerQueue.process(concurrency, async (payload, done) => {
       try {
         payload.log("Grill the patty");
@@ -267,7 +265,117 @@ export class NotificationsAPI {
       console.log("Job done ", job.id);
     });
 
+    burgerQueue.on("failed", (job) => {
+      if (job.attemptsMade >= retryAttempts) {
+        console.log(`Job ${job.id} has failed`);
+      } else {
+        console.log("Retrying job", job.id);
+        job.retry();
+      }
+    });
+
     burgerQueue.add(job, { attempts: 3, delay: scheduledAt });
+
+    return {
+      message: `Scheduled ${totalJobs} jobs.`,
+    };
+  }
+
+  static async killJob(object: any, options: any) {
+    const { redis } = config;
+    const redisOptions = {
+      redis,
+      maxRetriesPerRequest: null,
+      enableReadyCheck: false,
+    };
+    const burgerQueue = new Bull("burger", redisOptions);
+    const jobId = object.jobId;
+    const job = await burgerQueue.getJob(jobId);
+    if (job) {
+      job.remove();
+      return {
+        message: "Job removal successfull",
+      };
+    }
+
+    return {
+      message: "NO job found",
+    };
+  }
+
+  static async createPriorityBasedJobs(object: any, options: any) {
+    const scheduledAt =
+      new Date(object.scheduledAt).getTime() - new Date().getTime();
+    const sleepTime: number = Math.floor(Math.random() * 10 * 1000);
+    const totalJobs = object.totalJobs ?? 10;
+    const concurrency = object.concurrency ?? 2;
+    const retryAttempts = 6;
+
+    const priority = object.priority;
+    const { redis } = config;
+    const redisOptions = {
+      redis,
+      maxRetriesPerRequest: null,
+      enableReadyCheck: false,
+    };
+    const burgerQueue = new Bull("burger", redisOptions);
+    burgerQueue.process(concurrency, async (payload, done) => {
+      try {
+        payload.log("Grill the patty");
+        console.log("Process job started ", payload.id);
+        payload.progress(20);
+        await sleep(sleepTime);
+
+        // if (Math.random() > 0.25) {
+        //   throw new Error("Toast got burnts");
+        // }
+        payload.log("Toast the bun");
+        payload.progress(40);
+        await sleep(sleepTime);
+
+        payload.log("Add the toppings");
+        payload.progress(60);
+        await sleep(sleepTime);
+
+        payload.log("Assemble the layers");
+        payload.progress(80);
+        await sleep(sleepTime);
+
+        payload.log("Burger ready");
+        payload.progress(100);
+        await sleep(sleepTime);
+
+        done();
+      } catch (err: any) {
+        done(err);
+      }
+    });
+
+    const job = {
+      bun: "Bun",
+      cheese: "cheese",
+      toppings: ["tomato", "capsicum", "spinach", "chilli"],
+    };
+
+    burgerQueue.on("completed", (job) => {
+      console.log("Job done ", job.id);
+    });
+
+    burgerQueue.on("failed", (job) => {
+      if (job.attemptsMade >= retryAttempts) {
+        console.log(`Job ${job.id} has failed`);
+      } else {
+        console.log("Retrying job", job.id);
+        job.retry();
+      }
+    });
+
+    const myJob = await burgerQueue.add(job, {
+      attempts: 3,
+      delay: scheduledAt,
+      priority: priority,
+      jobId: `Job ${sleepTime} - ${priority}`,
+    });
 
     return {
       message: `Scheduled ${totalJobs} jobs.`,
