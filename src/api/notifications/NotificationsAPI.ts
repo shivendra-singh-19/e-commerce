@@ -410,8 +410,14 @@ export class NotificationsAPI {
       redis,
     };
 
+    /**
+     * Initialising the queue
+     */
     const burgerQueue = new Bull("burger", redisOptions);
 
+    /**
+     * Pushing a new job to the queue
+     */
     burgerQueue.add(
       {
         bun: "Bun",
