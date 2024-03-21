@@ -35,44 +35,35 @@ NotificationRouter.get("/bull/queue/test", async (req, res) => {
   res.send(apiResponse);
 });
 
-NotificationRouter.get("/bull/queue/test1", async (req, res) => {
+NotificationRouter.get("/bull/queue/progress/", async (req, res) => {
   const object = req.body;
   const options = {};
-  const apiResponse = await NotificationsAPI.testBullQueueTest1(
-    object,
-    options
-  );
+  const apiResponse = await NotificationsAPI.bullProgress(object, options);
   res.send(apiResponse);
 });
 
-NotificationRouter.get("/bull/queue/test2", async (req, res) => {
+NotificationRouter.get("/bull/queue/multipleJobs", async (req, res) => {
   const object = req.body;
   const options = {};
-  const apiResponse = await NotificationsAPI.testBullQueueTest2(
-    object,
-    options
-  );
+  const apiResponse = await NotificationsAPI.multipleJobs(object, options);
   res.send(apiResponse);
 });
 
-NotificationRouter.get("/bull/queue/test3", async (req, res) => {
+NotificationRouter.get("/bull/queue/job/retry", async (req, res) => {
   const object = req.body;
   const options = {};
-  const apiResponse = await NotificationsAPI.testBullQueueTest3(
-    object,
-    options
-  );
+  const apiResponse = await NotificationsAPI.jobRetries(object, options);
   res.send(apiResponse);
 });
 
-NotificationRouter.post("/bull/queue/test3/kill", async (req, res) => {
+NotificationRouter.post("/bull/queue/job/kill", async (req, res) => {
   const object = req.body;
   const options = {};
   const apiResponse = await NotificationsAPI.killJob(object, options);
   res.send(apiResponse);
 });
 
-NotificationRouter.get("/bull/queue/test4", async (req, res) => {
+NotificationRouter.get("/bull/queue/prioty-based-jobs", async (req, res) => {
   const object = req.body;
   const options = {};
   const apiResponse = await NotificationsAPI.createPriorityBasedJobs(
@@ -82,7 +73,7 @@ NotificationRouter.get("/bull/queue/test4", async (req, res) => {
   res.send(apiResponse);
 });
 
-NotificationRouter.get("/bull/queue/test5", async (req, res) => {
+NotificationRouter.get("/bull/queue/worker", async (req, res) => {
   const object = req.body;
   const options = {};
   const apiResponse = await NotificationsAPI.createForWorker(object, options);

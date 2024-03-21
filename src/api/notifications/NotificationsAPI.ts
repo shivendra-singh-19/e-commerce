@@ -92,7 +92,7 @@ export class NotificationsAPI {
     };
   }
 
-  static async testBullQueueTest1(object: any, options: any) {
+  static async bullProgress(object: any, options: any) {
     const { redis } = config;
     const redisOptions = {
       redis,
@@ -138,7 +138,7 @@ export class NotificationsAPI {
     };
   }
 
-  static async testBullQueueTest2(object: any, options: any) {
+  static async multipleJobs(object: any, options: any) {
     const { redis } = config;
     const redisOptions = {
       redis,
@@ -211,7 +211,7 @@ export class NotificationsAPI {
    * @param options
    * @returns
    */
-  static async testBullQueueTest3(object: any, options: any) {
+  static async jobRetries(object: any, options: any) {
     const scheduledAt = 2 * 60 * 1000;
     const sleepTime: number = Math.floor(Math.random() * 10 * 1000);
     const totalJobs = object.totalJobs ?? 10;
