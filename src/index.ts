@@ -50,5 +50,5 @@ app.use("/items", ItemsListingRouter);
 app.use("/notifications", NotificationRouter);
 
 app.listen(port, (): void => {
-  console.log(`Server Running at ${port}`);
+  console.log(`Server Running at ${port}.`);
 });
