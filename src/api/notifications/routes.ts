@@ -81,3 +81,10 @@ NotificationRouter.get("/bull/queue/test4", async (req, res) => {
   );
   res.send(apiResponse);
 });
+
+NotificationRouter.get("/bull/queue/test5", async (req, res) => {
+  const object = req.body;
+  const options = {};
+  const apiResponse = await NotificationsAPI.createForWorker(object, options);
+  res.send(apiResponse);
+});

@@ -58,6 +58,12 @@ export class NotificationsAPI {
     };
   }
 
+  /**
+   * Testing first job scheduling for bull queue using Bull npm package
+   * @param object
+   * @param options
+   * @returns
+   */
   static async testBullQueue(object: any, options: any) {
     const { redis } = config;
     const redisOptions = {
@@ -194,20 +200,17 @@ export class NotificationsAPI {
         attempts: 3,
       })
     );
-
-    // burgerQueue.on("completed", (job) => {
-    //   console.log(`${job.id} completed`);
-    // });
-
-    // burgerQueue.on("failed", (job) => {
-    //   console.log(`${job.id} failed`);
-    // });
-
     return {
       message: `Scheduled ${totalJobs} jobs.`,
     };
   }
 
+  /**
+   * Scheduling jobs with retry mechanisms
+   * @param object
+   * @param options
+   * @returns
+   */
   static async testBullQueueTest3(object: any, options: any) {
     const scheduledAt = 2 * 60 * 1000;
     const sleepTime: number = Math.floor(Math.random() * 10 * 1000);
@@ -259,8 +262,6 @@ export class NotificationsAPI {
       toppings: ["tomato", "capsicum", "spinach", "chilli"],
     };
 
-    const jobs = [...new Array(totalJobs)].map((_) => job);
-
     burgerQueue.on("completed", (job) => {
       console.log("Job done ", job.id);
     });
@@ -281,6 +282,12 @@ export class NotificationsAPI {
     };
   }
 
+  /**
+   * Killing a specific job
+   * @param object
+   * @param options
+   * @returns
+   */
   static async killJob(object: any, options: any) {
     const { redis } = config;
     const redisOptions = {
@@ -303,6 +310,12 @@ export class NotificationsAPI {
     };
   }
 
+  /**
+   * Creating jobs based on priority queues
+   * @param object
+   * @param options
+   * @returns
+   */
   static async createPriorityBasedJobs(object: any, options: any) {
     const scheduledAt =
       new Date(object.scheduledAt).getTime() - new Date().getTime();
@@ -370,6 +383,9 @@ export class NotificationsAPI {
       }
     });
 
+    /**
+     * Jobs won't be added to the queue if JobId is not unique
+     */
     const myJob = await burgerQueue.add(job, {
       attempts: 3,
       delay: scheduledAt,
@@ -378,7 +394,38 @@ export class NotificationsAPI {
     });
 
     return {
-      message: `Scheduled ${totalJobs} jobs.`,
+      message: `Scheduled delayed job with priority.`,
+    };
+  }
+
+  /**
+   * Scheduling the job and running on worker on another server
+   * @param object
+   * @param options
+   * @returns
+   */
+  static async createForWorker(object: any, options: any) {
+    const { redis } = config;
+    const redisOptions = {
+      redis,
+    };
+
+    const burgerQueue = new Bull("burger", redisOptions);
+
+    burgerQueue.add(
+      {
+        bun: "Bun",
+        cheese: "cheese",
+        toppings: ["tomato", "capsicum", "spinach", "chilli"],
+      },
+      {
+        delay: 5000,
+        attempts: 3,
+      }
+    );
+
+    return {
+      message: "Task scheduled seconds",
     };
   }
 }
