@@ -79,3 +79,26 @@ NotificationRouter.get("/bull/queue/worker", async (req, res) => {
   const apiResponse = await NotificationsAPI.createForWorker(object, options);
   res.send(apiResponse);
 });
+
+NotificationRouter.get("/bull/queue/worker/recurring", async (req, res) => {
+  const object = req.body;
+  const options = {};
+  const apiResponse = await NotificationsAPI.scheduleRecurringJobs(
+    object,
+    options
+  );
+  res.send(apiResponse);
+});
+
+NotificationRouter.get(
+  "/bull/queue/worker/recurring/kill",
+  async (req, res) => {
+    const object = req.body;
+    const options = {};
+    const apiResponse = await NotificationsAPI.removeRecurringJobs(
+      object,
+      options
+    );
+    res.send(apiResponse);
+  }
+);

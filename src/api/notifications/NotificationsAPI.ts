@@ -434,4 +434,61 @@ export class NotificationsAPI {
       message: "Task scheduled seconds",
     };
   }
+
+  static async scheduleRecurringJobs(object: any, options: any) {
+    const { redis } = config;
+    const redisOptions = {
+      redis,
+    };
+
+    /**
+     * Initialising the queue
+     */
+    const burgerQueue = new Bull("burger", redisOptions);
+
+    /**
+     * Pushing a new job to the queue
+     */
+    burgerQueue.add(
+      {
+        bun: "Bun",
+        cheese: "cheese",
+        toppings: ["tomato", "capsicum", "spinach", "chilli"],
+      },
+      {
+        jobId: "recurring-1",
+        repeat: {
+          cron: "* * * * *",
+        },
+        attempts: 3,
+        backoff: 3,
+        timeout: 60000,
+      }
+    );
+
+    return {
+      message: "Task scheduled seconds",
+    };
+  }
+
+  static async removeRecurringJobs(object: any, options: any) {
+    const { redis } = config;
+    const redisOptions = {
+      redis,
+    };
+
+    /**
+     * Initialising the queue
+     */
+    const burgerQueue = new Bull("burger", redisOptions);
+
+    const job = await burgerQueue.removeRepeatable({
+      cron: "* * * * *",
+      jobId: "recurring-1",
+    });
+
+    return {
+      message: "Killed a repeatable job",
+    };
+  }
 }
